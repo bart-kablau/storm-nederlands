@@ -1571,6 +1571,10 @@ document.addEventListener("keydown", e=>{
     return;
   }
   if(e.key!=="Enter") return;
+  // Een Enter die IN een invoerveld valt, hoort bij het antwoorden (check) — niet bij het
+  // doorklikken. Anders zou diezelfde toets de net getoonde feedback meteen weer wegklikken.
+  // Na het antwoorden is het veld disabled, dus de volgende Enter belandt op <body> en mag wél door.
+  if(/^(INPUT|TEXTAREA)$/.test(e.target && e.target.tagName)) return;
   // Quiz: na een antwoord met Enter door naar de volgende vraag
   if(el("screen-quiz").classList.contains("on") && el("q-next").style.display==="flex"){ e.preventDefault(); volgendeVraag(); }
   // Overhoren: na het nakijken met Enter door naar het volgende woord (input is dan disabled)
