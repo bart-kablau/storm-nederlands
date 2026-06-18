@@ -51,6 +51,7 @@ window.LEERSTOF = [
           waarom:{ q:"Waarom is 'de bal' het lijdend voorwerp?",
             o:["De bal ondergaat het stoppen","De bal doet iets","De bal is het onderwerp"],
             a:"De bal ondergaat het stoppen"},
+          fout:{"De bal doet iets":"juist niet — de bal dóét niets, de bal ondergáát iets (het stoppen). Wie iets doet is het onderwerp; wie iets ondergaat is het lijdend voorwerp.","De bal is het onderwerp":"het onderwerp is hier 'de keeper' (die stopt). 'De bal' ondergaat het stoppen, dus dat is het lijdend voorwerp."},
           stappen:[
             {toon:"De keeper stopte de bal.", uitleg:"Eerst onderwerp + werkwoord: wie stopte? → de keeper (onderwerp), stopte (wg)."},
             {toon:"Wie/wat stopte de keeper?", uitleg:"Stel de vraag: wie/wat + wg + onderwerp."},
@@ -143,6 +144,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welk woord is hier het lidwoord?",
             o:["het","potlood","pakt"],
             a:"het"},
+          fout:{"potlood":"'potlood' is het zelfstandig naamwoord (een ding). Het lidwoord is het kleine woordje ervóór: 'het'.","pakt":"'pakt' is het werkwoord (wat Storm doet). Een lidwoord is 'de', 'het' of 'een' — hier dus 'het'."},
           stappen:[
             {toon:"Storm pakt het potlood.", uitleg:"Zoek de drie lidwoorden: de, het of een."},
             {toon:"→ het", uitleg:"'het' is een lidwoord (bepaald). Het hoort bij 'potlood'."},
@@ -232,6 +234,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welk woord is het zelfstandig naamwoord?",
             o:["potlood","pakt","haar"],
             a:"potlood"},
+          fout:{"pakt":"'pakt' is het werkwoord. Een zelfstandig naamwoord is een ding, dier of persoon — hier 'potlood'.","haar":"'haar' is een bezittelijk voornaamwoord (van wie het potlood is). Het zelfstandig naamwoord, het ding zelf, is 'potlood'."},
           stappen:[
             {toon:"Storm pakt haar potlood.", uitleg:"Zoek het woord voor een mens, dier, plant, ding of gevoel."},
             {toon:"→ potlood", uitleg:"Een potlood is een ding → zelfstandig naamwoord."},
@@ -323,6 +326,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welk woord zegt iets over het paard?",
             o:["groot","paard","tekent"],
             a:"groot"},
+          fout:{"paard":"'paard' is het zelfstandig naamwoord zélf. We zoeken het woord dat er iets over zegt: hóe is het paard? → 'groot'.","tekent":"'tekent' is het werkwoord (wat Storm doet). Het bijvoeglijk naamwoord vertelt hoe het paard is: 'groot'."},
           stappen:[
             {toon:"Storm tekent een groot paard.", uitleg:"Zoek het woord dat vertelt hóe het paard is."},
             {toon:"→ groot", uitleg:"'groot' zegt iets extra over het paard → bijvoeglijk naamwoord."},
@@ -413,6 +417,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welk woord is het zelfstandig werkwoord (waar het écht over gaat)?",
             o:["keepen","kan","goed"],
             a:"keepen"},
+          fout:{"kan":"'kan' is een hulpwerkwoord — het helpt alleen. Het zelfstandig werkwoord, waar het écht over gaat, is 'keepen'.","goed":"'goed' zegt hóe Storm keept (een bijwoord). Het werkwoord, de echte actie, is 'keepen'."},
           stappen:[
             {toon:"Storm kan goed keepen.", uitleg:"Er staan twee werkwoorden: kan en keepen."},
             {toon:"'kan' = hulpwerkwoord", uitleg:"'kan' is extra; de zin gaat niet over 'kunnen'."},
@@ -503,6 +508,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welke twee woorden zijn persoonlijke voornaamwoorden?",
             o:["Hij en mij","Hij en bal","gaf en mij"],
             a:"Hij en mij"},
+          fout:{"Hij en bal":"'Hij' klopt, maar 'bal' is een zelfstandig naamwoord, geen voornaamwoord. Het tweede persoonlijk vnw is 'mij'.","gaf en mij":"'mij' klopt, maar 'gaf' is een werkwoord, geen voornaamwoord. Het andere persoonlijk vnw is 'Hij'."},
           stappen:[
             {toon:"Hij gaf mij de bal.", uitleg:"Zoek de woorden die naar personen verwijzen."},
             {toon:"'Hij' = onderwerpsvorm", uitleg:"Hij doet iets (geeft) → persoonlijk voornaamwoord."},
@@ -593,6 +599,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welk woord geeft aan van wie de knuffel is?",
             o:["mijn","knuffel","Dit"],
             a:"mijn"},
+          fout:{"knuffel":"'knuffel' is het ding zelf (zelfstandig naamwoord). Het woord dat aangeeft van wie hij is, is 'mijn'.","Dit":"'Dit' wijst alleen iets aan (aanwijzend vnw). Bezit — van wie de knuffel is — lees je in 'mijn'."},
           stappen:[
             {toon:"Dit is mijn knuffel.", uitleg:"Zoek het woord dat zegt van wie de knuffel is."},
             {toon:"→ mijn", uitleg:"'mijn' = van mij → bezittelijk voornaamwoord."},
@@ -683,6 +690,7 @@ window.LEERSTOF = [
           waarom:{ q:"Waarom is 'stopt' de persoonsvorm?",
             o:["Het verandert in 'stopte' bij een andere tijd","Het is een ding","Het zegt van wie de bal is"],
             a:"Het verandert in 'stopte' bij een andere tijd"},
+          fout:{"Het is een ding":"'stopt' is geen ding maar een werkwoord. Het is de persoonsvorm omdat het van vorm verandert als je de tijd verandert (stopt → stopte).","Het zegt van wie de bal is":"dat doet 'stopt' niet. Het is de persoonsvorm omdat het meeverandert met de tijd: nu 'stopt', verleden tijd 'stopte'."},
           stappen:[
             {toon:"De keeper stopt de bal.", uitleg:"Zoek het werkwoord dat de tijd aangeeft."},
             {toon:"Vroeger: De keeper stopte de bal.", uitleg:"'stopt' wordt 'stopte' → het verandert door de tijd."},
@@ -773,6 +781,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welke woorden vormen samen één zinsdeel?",
             o:["een rode bal","gooit een","Storm gooit"],
             a:"een rode bal"},
+          fout:{"gooit een":"deze twee horen niet bij elkaar: 'gooit' is het gezegde, 'een' hoort bij 'bal'. Eén zinsdeel is 'een rode bal'.","Storm gooit":"'Storm' en 'gooit' zijn twee aparte zinsdelen (onderwerp + gezegde). Het zinsdeel dat bij elkaar hoort is 'een rode bal'."},
           stappen:[
             {toon:"Storm gooit een rode bal.", uitleg:"De persoonsvorm 'gooit' staat op de tweede plaats."},
             {toon:"Storm | gooit | een rode bal", uitleg:"'een rode bal' hoort bij elkaar: lidwoord + bijvoeglijk naamwoord + zelfstandig naamwoord."},
@@ -865,6 +874,7 @@ window.LEERSTOF = [
           waarom:{ q:"Welke woorden vormen samen het werkwoordelijk gezegde?",
             o:["heeft en gezongen","alleen gezongen","heeft en mooi"],
             a:"heeft en gezongen"},
+          fout:{"alleen gezongen":"'gezongen' is maar de helft. Het hulpwerkwoord 'heeft' hoort er ook bij: samen 'heeft gezongen'.","heeft en mooi":"'heeft' klopt, maar 'mooi' is geen werkwoord (het zegt hóe ze zong). Het gezegde is 'heeft gezongen'."},
           stappen:[
             {toon:"De popster heeft mooi gezongen.", uitleg:"Zoek alle werkwoorden in de zin."},
             {toon:"heeft = persoonsvorm, gezongen = voltooid deelwoord", uitleg:"Allebei zijn het werkwoorden."},
@@ -955,6 +965,7 @@ window.LEERSTOF = [
           waarom:{ q:"Wie of wat is het onderwerp?",
             o:["De boze keeper","de bal","stopt"],
             a:"De boze keeper"},
+          fout:{"de bal":"'de bal' ondergaat het stoppen, dat is het lijdend voorwerp. Het onderwerp is wie stopt: 'De boze keeper'.","stopt":"'stopt' is het werkwoord (de persoonsvorm). Het onderwerp is wie die actie doet: 'De boze keeper'."},
           stappen:[
             {toon:"De boze keeper stopt de bal.", uitleg:"Stel de vraag: wie of wat stopt?"},
             {toon:"→ de boze keeper", uitleg:"Degene die het doet is het onderwerp; de drie woorden horen bij elkaar."},
@@ -1045,6 +1056,7 @@ window.LEERSTOF = [
           waarom:{ q:"Wie is het meewerkend voorwerp (de ontvanger)?",
             o:["Suze","een liefdesbrief","Erwin"],
             a:"Suze"},
+          fout:{"een liefdesbrief":"'een liefdesbrief' is wát er geschreven wordt (lijdend voorwerp). De ontvanger, voor wie het is, is 'Suze'.","Erwin":"'Erwin' is degene die schrijft, dat is het onderwerp. Het meewerkend voorwerp is de ontvanger: 'Suze'."},
           stappen:[
             {toon:"Erwin schreef Suze een liefdesbrief.", uitleg:"Erwin = onderwerp, schreef = werkwoord, een liefdesbrief = wat geschreven wordt."},
             {toon:"Wie ontving de brief?", uitleg:"Denk er 'aan' bij: aan wie schreef Erwin? → aan Suze."},
