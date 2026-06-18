@@ -1140,3 +1140,88 @@ window.AANMOEDIGING = {
   leveldown:["We pakken het rustig aan 💛","Even een stapje terug, samen oefenen we dit.","Geen stress — we doen het rustig."],
   stapelklaar:["Stapel klaar! 🎉","Lekker gedaan, Storm! 🌟","Helemaal af! 💪"]
 };
+
+/* =========================================================================
+   GENERATORS — Nederlands ontleed-drills uit één GEANNOTEERDE ZINNENBANK.
+   Elke zin is per woord getagd met z'n grammaticale rol; per onderwerp kiezen
+   we willekeurig een passende zin en bouwen een verse `ontleed`-vraag
+   (zin + de juiste woord-indices + waarom). Zo wisselt elke ronde van zin en
+   leert Storm de antwoorden niet uit het hoofd. Antwoord = exacte set indices
+   (renderOntleed splitst op spaties), dus automatisch te controleren.
+   Tags: lw=lidwoord zn=zelfst.nw bn=bijv.nw ww=(zelfst.)werkwoord
+   hww=hulpww vd=voltooid deelw. pv=persoonsvorm pvnw=pers.vnw bvnw=bezit.vnw
+   ond=onderwerp lv=lijdend vw mv=meewerkend vw  (wwg = alle werkwoorden, afgeleid)
+   ========================================================================= */
+(function(){
+  function mkZin(tokens){
+    const woorden=tokens.map(t=>Array.isArray(t)?t[0]:t), rol={};
+    tokens.forEach((t,i)=>{ if(Array.isArray(t)) t[1].split(/\s+/).forEach(c=>{ (rol[c]=rol[c]||[]).push(i); }); });
+    rol.wwg=Array.from(new Set([].concat(rol.pv||[],rol.hww||[],rol.ww||[],rol.vd||[]))).sort((a,b)=>a-b);
+    return { woorden, zin:woorden.join(" "), rol };
+  }
+  const BANK = [
+    mkZin([["Storm","ond"],["tekent","pv ww"],["een","lw lv"],["groot","bn lv"],["paard.","zn lv"]]),
+    mkZin([["De","lw ond"],["keeper","zn ond"],["stopte","pv ww"],["de","lw lv"],["harde","bn lv"],["bal.","zn lv"]]),
+    mkZin([["Hij","pvnw ond"],["schopt","pv ww"],["de","lw lv"],["bal","zn lv"],"weg."]),
+    mkZin([["Storm","ond"],["vergat","pv ww"],["haar","bvnw lv"],["zwembril.","zn lv"]]),
+    mkZin([["De","lw ond"],["meester","zn ond"],["gaf","pv ww"],["Storm","mv"],["een","lw lv"],["compliment.","zn lv"]]),
+    mkZin([["Storm","ond"],["heeft","pv hww"],["een","lw lv"],["doelpunt","zn lv"],["gescoord.","vd"]]),
+    mkZin([["Zij","pvnw ond"],["pakt","pv ww"],["haar","bvnw lv"],["nieuwe","bn lv"],["tas.","zn lv"]]),
+    mkZin([["De","lw ond"],["trainer","zn ond"],["geeft","pv ww"],["het","lw mv"],["team","zn mv"],["een","lw lv"],["tip.","zn lv"]]),
+    mkZin([["Een","lw ond"],["grote","bn ond"],["hond","zn ond"],["blaft","pv ww"],"luid."]),
+    mkZin([["Wij","pvnw ond"],["hebben","pv hww"],["de","lw lv"],["wedstrijd","zn lv"],["gewonnen.","vd"]]),
+    mkZin([["Storm","ond"],["geeft","pv ww"],["haar","bvnw mv"],["vriendin","zn mv"],["een","lw lv"],["cadeau.","zn lv"]]),
+    mkZin([["Ik","pvnw ond"],["lees","pv ww"],["een","lw lv"],["spannend","bn lv"],["boek.","zn lv"]]),
+    mkZin([["De","lw ond"],["juf","zn ond"],["heeft","pv hww"],["een","lw lv"],["verhaal","zn lv"],["verteld.","vd"]]),
+    mkZin([["Storm","ond"],["zwemt","pv ww"],"elke","dag."]),
+    mkZin([["Mijn","bvnw ond"],["broer","zn ond"],["kookt","pv ww"],["het","lw lv"],["eten.","zn lv"]]),
+    mkZin([["De","lw ond"],["spits","zn ond"],["gaf","pv ww"],["de","lw mv"],["doelman","zn mv"],["de","lw lv"],["bal.","zn lv"]]),
+    mkZin([["Zij","pvnw ond"],["heeft","pv hww"],["haar","bvnw lv"],["kamer","zn lv"],["opgeruimd.","vd"]]),
+    mkZin([["Storm","ond"],["bouwt","pv ww"],["een","lw lv"],["hoge","bn lv"],["toren.","zn lv"]])
+  ];
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const clean = s => String(s).replace(/[.,!?;:]+$/,"");
+  const wclean = (z,idx) => idx.map(i=>clean(z.woorden[i])).join(" ");
+  const single = code => z => (z.rol[code]||[]).length===1;
+  const group  = (code,min) => z => (z.rol[code]||[]).length>=(min||1);
+
+  function gen(code, mode, q, w){
+    return ()=>{
+      let cands = BANK.filter(mode); if(!cands.length) cands = BANK;
+      const z = pick(cands);
+      const idx = (z.rol[code]||[]).slice().sort((a,b)=>a-b);
+      return { t:"ontleed", zin:z.zin, antwoord:idx,
+        q:(typeof q==="function"?q(z,idx):q), w:w(z,idx) };
+    };
+  }
+  const T = {
+    "lidwoord": gen("lw", single("lw"), "Tik het LIDWOORD aan.",
+      (z,i)=>`'${clean(z.woorden[i[0]])}' is een lidwoord (de, het of een) en hoort bij het zelfstandig naamwoord erna.`),
+    "zelfstandig-naamwoord": gen("zn", single("zn"), "Tik het ZELFSTANDIG NAAMWOORD aan.",
+      (z,i)=>`Je kunt 'de' of 'het' voor '${clean(z.woorden[i[0]])}' zetten, en het verkleinen → zelfstandig naamwoord.`),
+    "bijvoeglijk-naamwoord": gen("bn", single("bn"), "Tik het BIJVOEGLIJK NAAMWOORD aan.",
+      (z,i)=>`'${clean(z.woorden[i[0]])}' zegt iets over het zelfstandig naamwoord (hoe is het?) → bijvoeglijk naamwoord.`),
+    "werkwoord": gen("ww", single("ww"), "Tik het WERKWOORD aan (waar de zin over gaat).",
+      (z,i)=>`'${clean(z.woorden[i[0]])}' is iets wat je doet → (zelfstandig) werkwoord.`),
+    "persoonlijk-vnw": gen("pvnw", single("pvnw"), "Tik het PERSOONLIJK VOORNAAMWOORD aan.",
+      (z,i)=>`'${clean(z.woorden[i[0]])}' verwijst naar een persoon → persoonlijk voornaamwoord.`),
+    "bezittelijk-vnw": gen("bvnw", single("bvnw"), "Tik het BEZITTELIJK VOORNAAMWOORD aan.",
+      (z,i)=>`'${clean(z.woorden[i[0]])}' geeft aan van wie iets is → bezittelijk voornaamwoord.`),
+    "persoonsvorm": gen("pv", single("pv"), "Tik de PERSOONSVORM aan.",
+      (z,i)=>`Tijdproef: in een andere tijd verandert '${clean(z.woorden[i[0]])}' van vorm → dat is de persoonsvorm.`),
+    "onderwerp": gen("ond", group("ond",1), "Tik de woorden aan die samen het ONDERWERP vormen.",
+      (z,i)=>`Wie of wat ${clean(z.woorden[(z.rol.pv||[0])[0]])}? → '${wclean(z,i)}' → het onderwerp.`),
+    "lijdend-voorwerp": gen("lv", group("lv",1), "Tik de woorden aan die samen het LIJDEND VOORWERP vormen.",
+      (z,i)=>`Wie of wat ondergaat de handeling? → '${wclean(z,i)}' → lijdend voorwerp.`),
+    "meewerkend-voorwerp": gen("mv", group("mv",1), "Tik de woorden aan die samen het MEEWERKEND VOORWERP vormen.",
+      (z,i)=>`Aan of voor wie? → '${wclean(z,i)}' → meewerkend voorwerp (je kunt er 'aan' bij denken).`),
+    "werkwoordelijk-gezegde": gen("wwg", group("wwg",2), "Tik ALLE werkwoorden aan die samen het WERKWOORDELIJK GEZEGDE vormen.",
+      (z,i)=>`De werkwoorden '${wclean(z,i)}' horen samen → werkwoordelijk gezegde.`),
+    "zinsdelen": gen("lv", group("lv",2),
+      (z,i)=>`Tik de woorden aan die samen ÉÉN zinsdeel vormen (het deel met '${clean(z.woorden[i[i.length-1]])}').`,
+      (z,i)=>`Met de verschuifproef horen '${wclean(z,i)}' bij elkaar → samen één zinsdeel.`)
+  };
+  const G = {};
+  for(const id in T){ G[id+"_n1"]=[T[id]]; G[id+"_n2"]=[T[id]]; G[id+"_n3"]=[T[id]]; }
+  window.GENERATORS = G;
+})();

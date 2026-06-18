@@ -882,7 +882,7 @@ function genInstances(gens, n){
     const fn=order[out.length % order.length];
     let q; try{ q=fn(); }catch(e){ continue; }
     if(!q) continue;
-    const sig=(q.opgave||q.q||"")+"|"+(q.a||JSON.stringify(q.stappen||q.velden||""));
+    const sig=(q.opgave||q.q||"")+"|"+(q.zin||q.a||"")+"|"+JSON.stringify(q.antwoord||q.stappen||q.velden||"");
     if(zien.has(sig)) continue;
     zien.add(sig); out.push(q);
   }
