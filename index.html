@@ -963,6 +963,21 @@ function eqCheck(val, antwoord, vars){
   return st==="goed" || st==="accent";
 }
 
+/* --- symbolenbalk: tekens die niet (makkelijk) op het toetsenbord zitten (· ^ ( ) + variabelen).
+       getInput() levert het invoerveld waar tekens in moeten; onChange() voor een live-preview. --- */
+function maakSymboolbalk(getInput, vars, onChange){
+  const pad=document.createElement("div"); pad.className="mpad";
+  function ins(t){ const inp=getInput(); if(!inp||inp.disabled) return;
+    const s=inp.selectionStart!=null?inp.selectionStart:inp.value.length, e=inp.selectionEnd!=null?inp.selectionEnd:inp.value.length;
+    inp.value=inp.value.slice(0,s)+t+inp.value.slice(e); const p=s+t.length; inp.focus(); try{inp.setSelectionRange(p,p);}catch(_){}
+    if(onChange) onChange(); }
+  (vars||[]).forEach(v=>{ const b=document.createElement("button"); b.type="button"; b.className="mkey"; b.textContent=v; b.onclick=()=>ins(v); pad.appendChild(b); });
+  [['·','·'],['^','xⁿ'],['(','('],[')',')']].forEach(([t,lab])=>{ const b=document.createElement("button"); b.type="button"; b.className="mkey"; b.textContent=lab; b.onclick=()=>ins(t); pad.appendChild(b); });
+  const bs=document.createElement("button"); bs.type="button"; bs.className="mkey wide"; bs.textContent="⌫";
+  bs.onclick=()=>{ const inp=getInput(); if(!inp||inp.disabled) return; inp.value=inp.value.slice(0,-1); inp.focus(); if(onChange) onChange(); }; pad.appendChild(bs);
+  return pad;
+}
+
 /* --- bouw: antwoord opbouwen met tekstveld + symbool-toetsen → equiv --- */
 function renderBouw(q, area){
   const vars=q.vars||[];
@@ -1003,7 +1018,13 @@ function renderVelden(q, area){
     '</div><button class="btn" id="velden-check" style="margin-top:14px">Check</button>';
   area.appendChild(box);
   el("velden-check").onclick=()=>checkVelden(q);
-  const first=el("velden").querySelector("input"); if(first){ first.onkeydown=e=>{ if(e.key==="Enter") checkVelden(q); }; setTimeout(()=>first.focus(),50); }
+  const inputs=[].slice.call(el("velden").querySelectorAll(".vinput"));
+  const first=inputs[0]; if(first){ first.onkeydown=e=>{ if(e.key==="Enter") checkVelden(q); }; setTimeout(()=>first.focus(),50); }
+  if(WIS){
+    let gericht=first; inputs.forEach(i=>i.addEventListener("focus",()=>gericht=i));
+    const letters = Array.from(new Set(vd.flatMap(v=> (window.mathVarsIn? window.mathVarsIn(v.a||"") : [])))).filter(c=>/[a-z]/.test(c));
+    el("velden").parentNode.insertBefore(maakSymboolbalk(()=>gericht||first, letters), el("velden-check"));
+  }
 }
 function checkVelden(q){
   const inputs=[].slice.call(el("velden").querySelectorAll(".vinput")); if(!inputs.length||inputs[0].disabled) return;
@@ -1064,6 +1085,7 @@ function renderStap(q, area){
     const inp=el("stap-in"); inp.onkeydown=e=>{ if(e.key==="Enter") checkStep(); };
     el("stap-hint").onclick=()=>{ const hints=s.hints||[]; if(hi<hints.length){ el("stap-fb").innerHTML='<div class="hint">💡 '+wisHTML(hints[hi])+'</div>'; hi++; } if(hi>=hints.length){ el("stap-show").style.display="inline"; } };
     el("stap-show").onclick=()=>reveal(s);
+    if(WIS) now.insertBefore(maakSymboolbalk(()=>el("stap-in"), q.vars||[]), el("stap-fb"));
     setTimeout(()=>inp.focus(),50);
   }
   function finish(){ now.innerHTML=""; const ok=!hulpGebruikt; scoreVraag(ok, q, ok?null:(q.a||steps[steps.length-1].a)); }
