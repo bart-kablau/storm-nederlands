@@ -854,10 +854,68 @@ function openVideoVoorHuidig(){ const v=vidId(); if(v) openVideo(v); }
 
 /* ---------- QUIZ / RONDE ---------- */
 let ronde=null;
+/* ---------- rondebouwer: elke ronde vers (parametrische generatoren + roterende vaste vragen) ----------
+   window.GENERATORS[topic+"_n"+niveau] = [fn,…] levert verse drills. Geen generatoren (andere vakken)
+   → terugval op de vaste pool, maar mét rotatie zodat niet elke ronde dezelfde vragen komen. */
+function gezienLijst(key){ if(!S.gezien) S.gezien={}; if(!S.gezien[key]) S.gezien[key]=[]; return S.gezien[key]; }
+function genGroep(topic, niveau){ return (window.GENERATORS||{})[topic+"_n"+niveau] || []; }
+function statici(topic, niveau, lv, filterFn){
+  return (lv.vragen||[]).map((q,i)=>Object.assign({_id:topic+":"+niveau+":"+i}, q)).filter(q=>filterFn?filterFn(q):true);
+}
+// kies n vaste vragen; voorkeur voor wat het langst niet getoond is (recency via S.gezien[key])
+function kiesRoterend(lijst, n, key){
+  if(!lijst.length || n<=0) return [];
+  const gz=gezienLijst(key);
+  const ongezien=shuffle(lijst.filter(x=>!gz.includes(x._id)));
+  const gezien  =lijst.filter(x=>gz.includes(x._id)).sort((a,b)=>gz.indexOf(a._id)-gz.indexOf(b._id));
+  const keuze=ongezien.concat(gezien).slice(0, Math.min(n, lijst.length));
+  keuze.forEach(x=>{ const k=gz.indexOf(x._id); if(k>=0) gz.splice(k,1); gz.push(x._id); });
+  while(gz.length>50) gz.shift();
+  save();
+  return keuze;
+}
+// genereer n verse instances; round-robin over geschudde generatoren; dedupe binnen de ronde
+function genInstances(gens, n){
+  if(!gens.length || n<=0) return [];
+  const order=shuffle(gens), out=[], zien=new Set(); let guard=0;
+  while(out.length<n && guard++ < n*15){
+    const fn=order[out.length % order.length];
+    let q; try{ q=fn(); }catch(e){ continue; }
+    if(!q) continue;
+    const sig=(q.opgave||q.q||"")+"|"+(q.a||JSON.stringify(q.stappen||q.velden||""));
+    if(zien.has(sig)) continue;
+    zien.add(sig); out.push(q);
+  }
+  return out;
+}
+// normale ronde: ~2 roterende vaste concept-vragen + de rest gegenereerde drills
+function bouwRonde(topic, niveau){
+  const g=LEERSTOF.find(x=>x.id===topic), lv=g.niveaus[niveau-1];
+  const gens=genGroep(topic, niveau), statics=statici(topic, niveau, lv);
+  if(!gens.length){
+    const keuze=kiesRoterend(statics, RONDE, "r:"+topic+":"+niveau);
+    return keuze.length ? keuze : shuffle(lv.vragen).slice(0,RONDE);
+  }
+  const nVast=Math.min(2, statics.length, RONDE-1);
+  const vast=kiesRoterend(statics, nVast, "r:"+topic+":"+niveau);
+  return shuffle(vast.concat(genInstances(gens, RONDE - vast.length)));
+}
+// extra-oefenen na goud: generatoren uit ALLE niveaus + roterende vaste vragen (geen vb)
+function bouwOefenRonde(topic){
+  const g=LEERSTOF.find(x=>x.id===topic);
+  const allGen=[]; g.niveaus.forEach(nv=>{ genGroep(topic, nv.n).forEach(fn=>allGen.push(fn)); });
+  let statics=[]; g.niveaus.forEach(nv=>{ statics=statics.concat(statici(topic, nv.n, nv, q=>q.t!=="vb")); });
+  if(!allGen.length){
+    const keuze=kiesRoterend(statics, RONDE, "o:"+topic);
+    return keuze.length ? keuze : shuffle(statics).slice(0,RONDE);
+  }
+  const nVast=Math.min(2, statics.length, RONDE-1);
+  const vast=kiesRoterend(statics, nVast, "o:"+topic);
+  return shuffle(vast.concat(genInstances(allGen, RONDE - vast.length)));
+}
 function startRonde(){
   const g=LEERSTOF.find(x=>x.id===huidigTopic); const st=gramState(huidigTopic);
-  const lv=g.niveaus[st.niveau-1];
-  ronde={vragen:shuffle(lv.vragen).slice(0,RONDE), i:0, goed:0, antwoorden:[]};
+  ronde={vragen:bouwRonde(huidigTopic, st.niveau), i:0, goed:0, antwoorden:[]};
   el("q-titel").textContent=g.titel; el("q-lvl").textContent=lvlNaam(st.niveau);
   show("quiz"); renderVraag();
 }
@@ -1615,9 +1673,9 @@ function proefEinde(){
 function startOefenen(id){
   const g=LEERSTOF.find(x=>x.id===id); if(!g){ show("grammatica"); return; }
   huidigTopic=id; S.laatste={modus:"grammatica",ref:id,label:g.titel}; save();
-  const pool=[]; g.niveaus.forEach(nv=>nv.vragen.forEach(q=>{ if(q.t!=="vb") pool.push(q); }));
-  if(!pool.length){ toast("Geen extra oefenvragen."); return; }
-  ronde={vragen:shuffle(pool).slice(0,RONDE), i:0, goed:0, antwoorden:[], oefen:true};
+  const vr=bouwOefenRonde(id);
+  if(!vr.length){ toast("Geen extra oefenvragen."); return; }
+  ronde={vragen:vr, i:0, goed:0, antwoorden:[], oefen:true};
   el("q-titel").textContent=g.titel; el("q-lvl").textContent="🔄 Extra oefenen";
   show("quiz"); renderVraag();
 }
