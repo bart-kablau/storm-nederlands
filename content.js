@@ -15,7 +15,10 @@ window.VAK = {
   spraak:{ vraagLang:"nl-NL", antwoordLang:"nl-NL" },
   matching:{ stripInfinitief:false, accentTolerant:false, lidwoordTolerant:false },
   masteryHits:2, stapelGrootte:8,
-  tegels:["leerstof","begrippen","proeftoets","spiekblad"]
+  tegels:["leerstof","begrippen","proeftoets","spiekblad"],
+  proefTitel:"Grammatica-toets",
+  tegelProef:{ em:"📝", h:"Grammatica-toets", p:"Alle regels door elkaar, net als de toets" },
+  overzichtFilm:"grammatica-overzicht-nl"
 };
 
 window.LEERSTOF = [
@@ -1225,3 +1228,207 @@ window.AANMOEDIGING = {
   for(const id in T){ G[id+"_n1"]=[T[id]]; G[id+"_n2"]=[T[id]]; G[id+"_n3"]=[T[id]]; }
   window.GENERATORS = G;
 })();
+
+
+/* =====================================================================
+   GRAMMATICA-OVERZICHT (Nederlands): de terugkerende "grammatica-kaart"
+   Kern-onderscheid: WAT VOOR WOORD is het (woordsoort, taalkundig) vs
+   WELKE ROL speelt het in de zin (zinsdeel, redekundig). En: bij zinsdelen
+   begin je ALTIJD bij de persoonsvorm. Gevoed door #screen-overzicht.
+   ===================================================================== */
+window.OVERZICHT = {
+  titel: "De grammatica-kaart",
+  intro: "Bij grammatica stel je jezelf eerst <b>één vraag</b>: vraag ik <b>wat voor woord</b> dit is (de woordsoort), of <b>welke rol</b> het in de zin speelt (het zinsdeel)? Datzelfde woord kan allebei tegelijk hebben! In <i>De keeper stopt de bal</i> is <i>keeper</i> qua woordsoort een zelfstandig naamwoord, en qua rol het onderwerp. Deze kaart blijft in beeld.",
+  kaart: [
+    { id:"woordsoort", label:"WAT VOOR WOORD?", sub:"woordsoort · taalkundig", kop:true, kleur:"plum",
+      kinderen:[
+        { id:"lidwoord", label:"lidwoord", regel:"de · het · een" },
+        { id:"zn", label:"zelfst. naamwoord", regel:"mens/dier/ding/gevoel" },
+        { id:"bn", label:"bijv. naamwoord", regel:"hoe is het? (mooi, hoog)" },
+        { id:"ww", label:"werkwoord", regel:"wat je doet (+ hulp-ww)" },
+        { id:"vnw", label:"voornaamwoord", regel:"persoonlijk · bezittelijk" }
+      ]
+    },
+    { id:"zinsdeel", label:"WELKE ROL IN DE ZIN?", sub:"zinsdeel · redekundig → proeven", kop:true, kleur:"brand",
+      kinderen:[
+        { id:"pv", label:"persoonsvorm", regel:"BEGIN HIER · tijd/vraagproef" },
+        { id:"onderwerp", label:"onderwerp", regel:"wie/wat + werkwoord?" },
+        { id:"wg", label:"werkw. gezegde", regel:"alle werkwoorden samen" },
+        { id:"lv", label:"lijdend voorwerp", regel:"wie/wat + ww + onderwerp?" },
+        { id:"mv", label:"meewerkend vw", regel:"aan wie/wat? (denk ’aan’)" }
+      ]
+    }
+  ],
+  stappen: [
+    {
+      kop: "Begin altijd hier 👇",
+      pad: [],
+      uitleg: [
+        "Kijk eerst naar de kaart hierboven. Er zijn twee soorten vragen die je over een woord kunt stellen, en die haal je makkelijk door elkaar.",
+        "<b>Wat voor woord</b> is het? Dat is de <b>woordsoort</b> (links). <b>Welke rol</b> speelt het in de zin? Dat is het <b>zinsdeel</b> (rechts). Eén woord heeft vaak allebei. Weet je dat verschil, dan klopt de rest vanzelf."
+      ]
+    },
+    {
+      kop: "Wat voor woord? → de woordsoort",
+      pad: ["woordsoort"],
+      uitleg: [
+        "De <b>woordsoort</b> is wat voor woord het is, los van de zin. Voor elke woordsoort is er een kleine <b>proef</b> waarmee je het herkent.",
+        "We lopen ze één voor één langs. Geen zorgen, het zijn er maar een paar."
+      ]
+    },
+    {
+      kop: "Lidwoord: de, het, een",
+      pad: ["woordsoort","lidwoord"],
+      uitleg: [ "Het <b>lidwoord</b> is het kleine woordje <b>de</b>, <b>het</b> of <b>een</b> dat vóór een zelfstandig naamwoord staat." ],
+      vb: [ { en:"De keeper stopt de bal.", let:"<b>De</b> is het lidwoord bij <i>keeper</i>." } ],
+      check: { q:"Welk woord is het lidwoord in: Een grote hond blaft.", o:["Een","grote","hond"], a:"Een",
+        goed:"Ja! <b>Een</b> is hier het lidwoord.", fout:{ "grote":"<i>grote</i> zegt iets over de hond → dat is een bijvoeglijk naamwoord.", "hond":"<i>hond</i> is het zelfstandig naamwoord, niet het lidwoord." } }
+    },
+    {
+      kop: "Zelfstandig naamwoord",
+      pad: ["woordsoort","zn"],
+      uitleg: [ "Een <b>zelfstandig naamwoord</b> is een woord voor een mens, dier, ding, plant of gevoel (en namen). <b>Proef:</b> je kunt er <i>de</i> of <i>het</i> voor zetten, en je kunt het verkleinen (keeper → keepertje)." ],
+      vb: [ { en:"Storm bouwt een hoge toren.", let:"<i>toren</i> → de toren, het torentje → zelfstandig naamwoord." } ],
+      check: { q:"Welk woord is het zelfstandig naamwoord in: Storm aait een zachte knuffel.", o:["knuffel","zachte","aait"], a:"knuffel",
+        goed:"Klopt! De knuffel, het knuffeltje → zelfstandig naamwoord.", fout:{ "zachte":"<i>zachte</i> zegt iets over de knuffel → bijvoeglijk naamwoord.", "aait":"<i>aait</i> is iets wat je doet → werkwoord." } }
+    },
+    {
+      kop: "Bijvoeglijk naamwoord",
+      pad: ["woordsoort","bn"],
+      uitleg: [ "Een <b>bijvoeglijk naamwoord</b> zegt iets extra over een zelfstandig naamwoord: <b>hoe</b> is het? (mooi, rood, hoog, snel)." ],
+      vb: [ { en:"Ik lees een spannend boek.", let:"<i>spannend</i> zegt hoe het boek is → bijvoeglijk naamwoord." } ],
+      check: { q:"Welk woord is het bijvoeglijk naamwoord in: een hoge toren?", o:["hoge","toren","een"], a:"hoge",
+        goed:"Ja! <i>hoge</i> zegt hoe de toren is.", fout:{ "toren":"<i>toren</i> is het zelfstandig naamwoord.", "een":"<i>een</i> is het lidwoord." } }
+    },
+    {
+      kop: "Werkwoord",
+      pad: ["woordsoort","ww"],
+      uitleg: [ "Een <b>werkwoord</b> geeft aan wat er gebeurt (lopen, stoppen, hebben). Het <b>zelfstandig werkwoord</b> is het belangrijkste; <b>hulpwerkwoorden</b> (hebben, zijn, kunnen…) zijn extra." ],
+      vb: [ { en:"Storm heeft een doelpunt gescoord.", let:"<i>heeft</i> = hulpwerkwoord, <i>gescoord</i> = het zelfstandige deel." } ],
+      check: { q:"Welk woord is het werkwoord in: De keeper stopt de bal.", o:["stopt","keeper","bal"], a:"stopt",
+        goed:"Top! <i>stopt</i> is iets wat je doet.", fout:{ "keeper":"<i>keeper</i> is een zelfstandig naamwoord.", "bal":"<i>bal</i> is een zelfstandig naamwoord." } }
+    },
+    {
+      kop: "Voornaamwoorden: persoonlijk en bezittelijk",
+      pad: ["woordsoort","vnw"],
+      uitleg: [
+        "Een <b>persoonlijk voornaamwoord</b> verwijst naar een persoon en vervangt een zelfstandig naamwoord: <i>ik, jij, hij, zij, wij, mij, hem, ons</i>.",
+        "Een <b>bezittelijk voornaamwoord</b> geeft aan <b>van wie</b> iets is: <i>mijn, jouw, zijn, haar, onze, hun</i>."
+      ],
+      vb: [ { en:"Zij pakt haar nieuwe tas.", let:"<i>Zij</i> = persoonlijk (de persoon), <i>haar</i> = bezittelijk (van wie de tas is)." } ],
+      check: { q:"Wat is ’haar’ in: Storm pakt haar tas?", o:["bezittelijk voornaamwoord","persoonlijk voornaamwoord","lidwoord"], a:"bezittelijk voornaamwoord",
+        goed:"Ja! <i>haar</i> geeft aan van wie de tas is.", fout:{ "persoonlijk voornaamwoord":"<i>haar</i> verwijst hier niet naar een persoon, maar zegt van wie de tas is → bezittelijk.", "lidwoord":"lidwoorden zijn alleen de, het en een." } }
+    },
+    {
+      kop: "Welke rol in de zin? → het zinsdeel (begin bij de persoonsvorm!)",
+      pad: ["zinsdeel"],
+      uitleg: [
+        "Nu de <b>rol</b> van woorden in de zin: de zinsdelen. Die vind je niet door te kijken wat voor woord het is, maar met <b>proeven</b>.",
+        "Het allerbelangrijkste: <b>begin altijd bij de persoonsvorm</b>. Heb je die gevonden, dan vind je de rest daarna stap voor stap."
+      ]
+    },
+    {
+      kop: "Persoonsvorm: begin hier",
+      pad: ["zinsdeel","pv"],
+      uitleg: [
+        "De <b>persoonsvorm</b> (pv) is het werkwoord dat de <b>tijd</b> aangeeft. Je vindt 'm met een proef:",
+        "<b>Tijdproef:</b> zet de zin in een andere tijd. Het woord dat verandert, is de persoonsvorm. <b>Vraagproef:</b> maak er een ja/nee-vraag van. Het werkwoord dat naar voren springt, is de persoonsvorm."
+      ],
+      vb: [ { en:"De keeper stopt de bal.", let:"Gisteren <b>stopte</b> de keeper… → <i>stopt</i> verandert → persoonsvorm." } ],
+      check: { q:"Wat is de persoonsvorm in: Storm heeft een doelpunt gescoord.", o:["heeft","gescoord","Storm"], a:"heeft",
+        goed:"Knap! <i>heeft</i> verandert met de tijd (had) → persoonsvorm.", fout:{ "gescoord":"<i>gescoord</i> is een voltooid deelwoord; het verandert niet met de tijd.", "Storm":"<i>Storm</i> is het onderwerp, geen werkwoord." } }
+    },
+    {
+      kop: "Onderwerp: wie of wat + werkwoord?",
+      pad: ["zinsdeel","onderwerp"],
+      uitleg: [ "Het <b>onderwerp</b> is <b>wie of wat</b> iets doet of is. <b>Proef:</b> zeg de werkwoorden en vraag <i>wie of wat?</i> ervoor. Onderwerp en persoonsvorm hebben altijd hetzelfde getal." ],
+      vb: [ { en:"De keeper stopt de bal.", let:"Wie stopt? → <b>de keeper</b> → het onderwerp." } ],
+      check: { q:"Wat is het onderwerp in: Een grote hond blaft luid.", o:["Een grote hond","luid","blaft"], a:"Een grote hond",
+        goed:"Ja! Wie blaft? Een grote hond.", fout:{ "luid":"<i>luid</i> zegt hoe er geblaft wordt, niet wie.", "blaft":"<i>blaft</i> is de persoonsvorm, niet het onderwerp." } }
+    },
+    {
+      kop: "Werkwoordelijk gezegde",
+      pad: ["zinsdeel","wg"],
+      uitleg: [ "Het <b>werkwoordelijk gezegde</b> (wg) bestaat uit <b>alle werkwoorden</b> van de zin samen (ook de persoonsvorm)." ],
+      vb: [ { en:"Wij hebben de wedstrijd gewonnen.", let:"<b>hebben</b> + <b>gewonnen</b> samen → het werkwoordelijk gezegde." } ],
+      check: { q:"Welke woorden vormen samen het werkwoordelijk gezegde in: Storm heeft haar kamer opgeruimd.", o:["heeft opgeruimd","heeft","kamer opgeruimd"], a:"heeft opgeruimd",
+        goed:"Klopt! Alle werkwoorden: heeft + opgeruimd.", fout:{ "heeft":"<i>heeft</i> is alleen de persoonsvorm; <i>opgeruimd</i> hoort er ook bij.", "kamer opgeruimd":"<i>kamer</i> is geen werkwoord." } }
+    },
+    {
+      kop: "Lijdend voorwerp (let op: niet het onderwerp!)",
+      pad: ["zinsdeel","lv"],
+      uitleg: [
+        "Het <b>lijdend voorwerp</b> is wie of wat de handeling <b>ondergaat</b>. <b>Proef:</b> zeg <i>het werkwoord + het onderwerp</i> en vraag dan <b>wie of wat?</b>",
+        "Verschil met het onderwerp: het onderwerp <b>doet</b> iets, het lijdend voorwerp <b>ondergaat</b> iets. Het begint nooit met een voorzetsel."
+      ],
+      vb: [ { en:"De keeper stopt de bal.", let:"Wie/wat stopt de keeper? → <b>de bal</b> → lijdend voorwerp (het ondergaat het stoppen)." } ],
+      check: { q:"Wat is het lijdend voorwerp in: Mijn broer kookt het eten.", o:["het eten","Mijn broer","kookt"], a:"het eten",
+        goed:"Ja! Wat kookt mijn broer? Het eten.", fout:{ "Mijn broer":"<i>Mijn broer</i> doet iets → dat is het onderwerp, niet het lijdend voorwerp.", "kookt":"<i>kookt</i> is de persoonsvorm." } }
+    },
+    {
+      kop: "Meewerkend voorwerp",
+      pad: ["zinsdeel","mv"],
+      uitleg: [ "Het <b>meewerkend voorwerp</b> is wie of wat iets <b>ontvangt</b>. <b>Proef:</b> je kunt er <i>aan</i> of <i>voor</i> bij denken. Vraag: <i>aan wie/wat?</i>" ],
+      vb: [ { en:"De juf gaf de klas een moeilijke toets.", let:"Aan wie gaf de juf de toets? → <b>de klas</b> → meewerkend voorwerp." } ],
+      check: { q:"Wat is het meewerkend voorwerp in: De trainer geeft het team een tip.", o:["het team","een tip","De trainer"], a:"het team",
+        goed:"Top! Aan wie geeft de trainer een tip? Aan het team.", fout:{ "een tip":"<i>een tip</i> is wat gegeven wordt → lijdend voorwerp.", "De trainer":"<i>De trainer</i> doet iets → onderwerp." } }
+    },
+    {
+      kop: "De hele kaart op een rij 🌟",
+      pad: [],
+      samenvatting: [
+        "Vraag altijd eerst: <b>wat voor woord</b> (woordsoort) of <b>welke rol</b> (zinsdeel)?",
+        "<b>Woordsoort</b>: lidwoord · zelfstandig nw · bijvoeglijk nw · werkwoord · voornaamwoord. Elk heeft een proef.",
+        "<b>Zinsdeel</b>: begin bij de <b>persoonsvorm</b> (tijd/vraagproef), dan het <b>onderwerp</b> (wie/wat + ww), dan de rest.",
+        "<b>Onderwerp doet, lijdend voorwerp ondergaat.</b> Bij meewerkend voorwerp kun je er <i>aan</i> bij denken.",
+        "Eén woord kan allebei hebben: een woordsoort én een rol in de zin."
+      ],
+      uitleg: [ "Dit is alles, Storm. Het belangrijkste: hou <b>woordsoort</b> en <b>zinsdeel</b> uit elkaar, en <b>begin bij de persoonsvorm</b>. Ga het nu oefenen in de toets, daar staat alles door elkaar. Je kunt dit! 💪" ]
+    }
+  ]
+};
+
+/* Discriminatie-vragen voor de Grammatica-toets: dwingen je om te KIEZEN
+   tussen woordsoort en zinsdeel, en tussen onderwerp en lijdend voorwerp. */
+window.MIXVRAGEN = [
+  { t:"mc", q:"In ’De keeper stopt de bal’: wat voor WOORD is ’keeper’?", o:["zelfstandig naamwoord","werkwoord","onderwerp"], a:"zelfstandig naamwoord",
+    w:"Woordsoort: de keeper, het keepertje → zelfstandig naamwoord.",
+    meer:"Let op: ’onderwerp’ is een ROL (zinsdeel), geen woordsoort. De vraag is wat voor woord het is.",
+    fout:{ "werkwoord":"een werkwoord is iets wat je doet; ’keeper’ is een ding/persoon.", "onderwerp":"’onderwerp’ is een zinsdeel (rol), niet een woordsoort. Qua woordsoort is het een zelfstandig naamwoord." } },
+  { t:"mc", q:"In ’De keeper stopt de bal’: welke ROL heeft ’de keeper’ in de zin?", o:["onderwerp","lijdend voorwerp","persoonsvorm"], a:"onderwerp",
+    w:"Wie stopt? De keeper → onderwerp.",
+    meer:"Zinsdeel = rol in de zin. Wie/wat + werkwoord? → de keeper → onderwerp.",
+    fout:{ "lijdend voorwerp":"de keeper DOET iets (stoppen); het lijdend voorwerp ondergaat juist iets.", "persoonsvorm":"de persoonsvorm is het werkwoord ’stopt’, niet ’de keeper’." } },
+  { t:"mc", q:"In ’De keeper stopt de bal’: wat is ’de bal’?", o:["lijdend voorwerp","onderwerp","meewerkend voorwerp"], a:"lijdend voorwerp",
+    w:"Wat stopt de keeper? De bal → lijdend voorwerp.",
+    meer:"De bal ondergaat de handeling (wordt gestopt) → lijdend voorwerp.",
+    fout:{ "onderwerp":"het onderwerp is ’de keeper’ (die doet iets); de bal ondergaat iets.", "meewerkend voorwerp":"daar kun je ’aan’ bij denken (aan wie?); dat past hier niet." } },
+  { t:"mc", q:"Wat is de persoonsvorm in: Storm heeft een doelpunt gescoord.", o:["heeft","gescoord","doelpunt"], a:"heeft",
+    w:"Tijdproef: ’heeft’ → ’had’ verandert → persoonsvorm.",
+    meer:"’gescoord’ is een voltooid deelwoord; dat verandert niet met de tijd.",
+    fout:{ "gescoord":"dat is een voltooid deelwoord, geen persoonsvorm.", "doelpunt":"dat is een zelfstandig naamwoord." } },
+  { t:"mc", q:"In ’De juf gaf de klas een toets’: wat is ’de klas’?", o:["meewerkend voorwerp","lijdend voorwerp","onderwerp"], a:"meewerkend voorwerp",
+    w:"Aan wie gaf de juf de toets? Aan de klas → meewerkend voorwerp.",
+    meer:"Je kunt er ’aan’ bij denken (aan de klas) → meewerkend voorwerp.",
+    fout:{ "lijdend voorwerp":"dat is ’een toets’ (wat gegeven wordt).", "onderwerp":"dat is ’de juf’ (die geeft)." } },
+  { t:"mc", q:"Welk woord is het bijvoeglijk naamwoord in: Ik lees een spannend boek.", o:["spannend","boek","lees"], a:"spannend",
+    w:"’spannend’ zegt hoe het boek is → bijvoeglijk naamwoord.",
+    meer:"Bijvoeglijk naamwoord = hoe is het zelfstandig naamwoord?",
+    fout:{ "boek":"dat is het zelfstandig naamwoord.", "lees":"dat is het werkwoord." } },
+  { t:"mc", q:"Is ’haar’ in ’Zij pakt haar tas’ een…", o:["bezittelijk voornaamwoord","persoonlijk voornaamwoord","lidwoord"], a:"bezittelijk voornaamwoord",
+    w:"’haar’ geeft aan van wie de tas is → bezittelijk.",
+    meer:"Bezittelijk = van wie. Persoonlijk = verwijst naar de persoon zelf (zij, hem).",
+    fout:{ "persoonlijk voornaamwoord":"hier zegt ’haar’ van wie de tas is, niet de persoon zelf.", "lidwoord":"lidwoorden zijn alleen de, het, een." } },
+  { t:"mc", q:"Hoe vind je de persoonsvorm het makkelijkst?", o:["maak er een ja/nee-vraag van","tel het aantal woorden","kijk naar het laatste woord"], a:"maak er een ja/nee-vraag van",
+    w:"Vraagproef: het werkwoord dat naar voren springt is de persoonsvorm.",
+    meer:"Of de tijdproef: zet de zin in een andere tijd; wat verandert is de persoonsvorm.",
+    fout:{ "tel het aantal woorden":"daarmee vind je de persoonsvorm niet.", "kijk naar het laatste woord":"de persoonsvorm staat lang niet altijd achteraan." } },
+  { t:"mc", q:"Het verschil: het ONDERWERP…", o:["doet of is iets","ondergaat iets","ontvangt iets"], a:"doet of is iets",
+    w:"Onderwerp doet/is iets; lijdend voorwerp ondergaat; meewerkend voorwerp ontvangt.",
+    meer:"Dit is het kernverschil tussen de zinsdelen.",
+    fout:{ "ondergaat iets":"dat is het lijdend voorwerp.", "ontvangt iets":"dat is het meewerkend voorwerp." } },
+  { t:"mc", q:"In ’Een grote hond blaft’: wat voor woord is ’grote’, en niet de rol?", o:["bijvoeglijk naamwoord","onderwerp","zelfstandig naamwoord"], a:"bijvoeglijk naamwoord",
+    w:"’grote’ zegt hoe de hond is → bijvoeglijk naamwoord (woordsoort).",
+    meer:"’onderwerp’ zou een rol zijn; de vraag gaat over de woordsoort.",
+    fout:{ "onderwerp":"dat is een zinsdeel (rol); ’Een grote hond’ samen is het onderwerp, maar ’grote’ als woord is een bijvoeglijk naamwoord.", "zelfstandig naamwoord":"het zelfstandig naamwoord is ’hond’." } }
+];

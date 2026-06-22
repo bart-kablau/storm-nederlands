@@ -383,6 +383,37 @@ sup{font-size:.72em;line-height:0}
 .btn.self-no{background:linear-gradient(135deg,var(--soft),oklch(0.66 0.16 25))}
 .ai-panel{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:14px}
 .ai-panel .veld{margin-top:8px}
+/* ---- grammatica-overzicht: de terugkerende kaart (beslisboom) ---- */
+.ov-kaart{position:sticky;top:6px;z-index:3;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:11px;margin-bottom:14px;box-shadow:var(--shadow)}
+.ovk-rij{display:flex;gap:8px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.ovk-col{display:flex;flex-direction:column;gap:7px;flex:1;min-width:135px}
+.knoop{border:1.5px solid var(--line);border-radius:12px;padding:7px 10px;background:var(--surface-2);transition:.25s var(--ease)}
+.knoop.kop{background:linear-gradient(135deg,oklch(0.975 0.02 345),var(--surface))}
+.knoop.brand.kop{background:linear-gradient(135deg,oklch(0.975 0.03 48),var(--surface))}
+.knoop b{display:block;font-size:.9rem;color:var(--ink);line-height:1.22}
+.knoop .ksub{font-size:.72rem;color:var(--ink-soft)}
+.knoop .kregel{display:inline-block;margin-top:4px;font-size:.74rem;font-weight:800;color:var(--brand-ink);background:oklch(0.96 0.055 48);border:1px solid oklch(0.88 0.08 52);border-radius:8px;padding:1px 7px}
+.ovk-kind{margin-top:7px;padding-left:9px;border-left:2px dashed var(--line);display:flex;flex-direction:column;gap:7px}
+.knoop.actief{border-color:var(--brand);background:linear-gradient(135deg,oklch(0.965 0.06 48),var(--surface));box-shadow:0 0 0 3px oklch(0.70 0.185 46 / .2);transform:translateY(-1px)}
+.knoop.plum.actief{border-color:var(--plum);background:linear-gradient(135deg,oklch(0.96 0.055 345),var(--surface));box-shadow:0 0 0 3px oklch(0.36 0.10 345 / .2)}
+.knoop.dim{opacity:.36}
+.ov-kop{margin:4px 0 9px;color:var(--plum);font-size:1.13rem;line-height:1.25}
+.ov-intro{color:var(--ink-soft)}
+#ov-body p{margin:.5rem 0}
+.ov-sum{margin-top:8px;background:oklch(0.97 0.04 345);border:1px solid oklch(0.88 0.05 345);border-radius:12px;padding:12px 14px}
+.ov-sum ul{margin:8px 0 0;padding-left:20px}.ov-sum li{margin:5px 0}
+.ov-check{margin-top:14px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:13px}
+.ov-q{font-weight:800;color:var(--ink);margin-bottom:9px}
+.ov-opts{display:flex;flex-direction:column;gap:8px}
+.ov-opt{text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:10px 13px;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.15s var(--ease)}
+.ov-opt:hover:not(:disabled){border-color:var(--brand)}
+.ov-opt:disabled{cursor:default}
+.ov-opt.ok{border-color:var(--ok);background:oklch(0.95 0.06 165)}
+.ov-opt.mis{border-color:var(--soft);background:oklch(0.96 0.04 25)}
+.ov-fb{margin-top:10px;font-weight:600;font-size:.95rem;line-height:1.4}
+.ov-fb .ok{color:oklch(0.40 0.10 165)}.ov-fb .mis{color:var(--brand-ink)}
+.ov-nav{display:flex;gap:10px;margin-top:16px}
+.ov-nav .btn{flex:1}
 </style>
 </head>
 <body>
@@ -427,6 +458,20 @@ sup{font-size:.72em;line-height:0}
     <button class="btn" id="verder-btn" style="margin-top:12px;display:none" onclick="verder()">▶ Ga verder waar je was</button>
 
     <div class="tiles">
+      <button class="tile wide" id="tile-kaart-btn" style="display:none;background:linear-gradient(135deg,oklch(0.975 0.05 345),var(--surface));border-color:oklch(0.86 0.06 345)" onclick="startOverzicht()">
+        <span class="em">🗺️</span>
+        <div style="flex:1">
+          <h3 id="tile-kaart-h">Grammatica-kaart</h3>
+          <p id="tile-kaart-p">Snap alle grammatica in één overzicht, stap voor stap</p>
+        </div>
+      </button>
+      <button class="tile wide" id="tile-film-btn" style="display:none;background:linear-gradient(135deg,oklch(0.975 0.045 48),var(--surface));border-color:oklch(0.86 0.07 52)" onclick="openOverzichtFilm()">
+        <span class="em">🎬</span>
+        <div style="flex:1">
+          <h3 id="tile-film-h">Grammatica-overzichtsfilm</h3>
+          <p id="tile-film-p">Bekijk alle grammatica in één film</p>
+        </div>
+      </button>
       <button class="tile wide" id="tile-leerstof-btn" onclick="show('grammatica')">
         <span class="em" id="tile-leerstof-em">📖</span>
         <div style="flex:1">
@@ -456,6 +501,18 @@ sup{font-size:.72em;line-height:0}
 
     <footer>Werkt offline · je voortgang blijft op dit apparaat bewaard.<br>
       <button class="linkbtn" onclick="resetAlles()">Voortgang wissen</button></footer>
+  </section>
+
+  <!-- ============ GRAMMATICA-OVERZICHT (de terugkerende kaart) ============ -->
+  <section id="screen-overzicht" class="screen">
+    <div class="shead"><button class="back" onclick="show('home')">←</button><h2 id="ov-titel">Grammatica-kaart</h2><span class="lvl" id="ov-teller"></span></div>
+    <div class="ov-kaart" id="ov-kaart"></div>
+    <div class="panel"><div id="ov-body"></div></div>
+    <div class="ov-check" id="ov-check" style="display:none"></div>
+    <div class="ov-nav">
+      <button class="btn ghost" id="ov-prev" style="display:none">← Vorige</button>
+      <button class="btn" id="ov-next">Volgende →</button>
+    </div>
   </section>
 
   <!-- ============ LEERSTOF (onderwerpenlijst) ============ -->
@@ -751,11 +808,12 @@ function zegEN(t){ zegDoel(t); }   // alias: spreekt de doeltaal (CONFIG.voiceLa
 function zegNL(t){ spreek(t,"nl-NL"); }
 
 /* ---------- navigatie ---------- */
-const SCREENS=["home","grammatica","uitleg","quiz","result","woorden","thema","stapel","leren","wtoets","spel","spiekblad","podcast"];
+const SCREENS=["home","overzicht","grammatica","uitleg","quiz","result","woorden","thema","stapel","leren","wtoets","spel","spiekblad","podcast"];
 function show(name){
   SCREENS.forEach(s=>el("screen-"+s).classList.toggle("on", s===name));
   window.scrollTo({top:0,behavior:"instant"});
   if(name==="home") renderHome();
+  if(name==="overzicht") renderOverzicht();
   if(name==="grammatica") renderGramLijst();
   if(name==="woorden") renderWoordenLijst();
   if(name==="thema") renderStapels();
@@ -1632,6 +1690,60 @@ function closeVideo(){
   m.classList.remove("on"); v.removeAttribute("src"); v.load();
 }
 
+/* ---------- grammatica-overzicht: de terugkerende kaart (window.OVERZICHT) ---------- */
+let ovStap=0;
+function startOverzicht(){ ovStap=0; show("overzicht"); }
+function openOverzichtFilm(){ if(VAK.overzichtFilm) openVideo(VAK.overzichtFilm); }
+function ovKnoop(n, set){
+  const cls="knoop"+(n.kop?" kop":"")+(n.kleur?(" "+n.kleur):"")+(set.has(n.id)?" actief":(set.size?" dim":""));
+  const inner=`<b>${n.label}</b>`+(n.sub?`<span class="ksub">${n.sub}</span>`:"")+(n.regel?`<span class="kregel">${n.regel}</span>`:"");
+  const kids=n.kinderen?`<div class="ovk-kind">`+n.kinderen.map(k=>ovKnoop(k,set)).join("")+`</div>`:"";
+  return `<div class="ovk-col"><div class="${cls}">${inner}</div>${kids}</div>`;
+}
+function kaartHTML(nodes, set){ return `<div class="ovk-rij">`+(nodes||[]).map(n=>ovKnoop(n,set)).join("")+`</div>`; }
+function renderOverzicht(){
+  const O=window.OVERZICHT; if(!O||!O.stappen||!O.stappen.length) return;
+  const steps=O.stappen;
+  ovStap=Math.max(0,Math.min(ovStap,steps.length-1));
+  const i=ovStap, s=steps[i];
+  el("ov-titel").textContent=O.titel||"Grammatica-kaart";
+  el("ov-teller").textContent=(i+1)+" / "+steps.length;
+  el("ov-kaart").innerHTML=kaartHTML(O.kaart||[], new Set(s.pad||[]));
+  let h=`<h3 class="ov-kop">${s.kop||""}</h3>`;
+  if(i===0 && O.intro) h+=`<p class="ov-intro">${O.intro}</p>`;
+  if(s.uitleg) h+=s.uitleg.map(p=>`<p>${p}</p>`).join("");
+  if(s.vb&&s.vb.length){
+    h+=`<div class="vb">`+s.vb.map(v=>{ const t=(v.en||"").replace(/'/g,"\\'");
+      return `<div class="v"><button class="spk" onclick="zegEN('${t}')">🔊</button><div><div class="en">${v.en||""}</div>${v.nl?`<div class="nl">${v.nl}</div>`:""}${v.let?`<div class="let">💡 ${v.let}</div>`:""}</div></div>`;
+    }).join("")+`</div>`;
+  }
+  if(s.samenvatting&&s.samenvatting.length){ h+=`<div class="ov-sum"><b>Onthoud de kaart:</b><ul>`+s.samenvatting.map(x=>`<li>${x}</li>`).join("")+`</ul></div>`; }
+  el("ov-body").innerHTML=h;
+  const cb=el("ov-check");
+  if(s.check){ cb.style.display="block"; renderOvCheck(s.check); } else { cb.style.display="none"; cb.innerHTML=""; }
+  el("ov-prev").style.display = i>0 ? "inline-flex" : "none";
+  el("ov-prev").onclick = ()=>{ ovStap--; renderOverzicht(); };
+  const laatste = i===steps.length-1;
+  const toetsKlaar = (window.MIXVRAGEN&&window.MIXVRAGEN.length) || (VAK.tegels&&VAK.tegels.includes("proeftoets"));
+  const nb=el("ov-next");
+  nb.textContent = laatste ? (toetsKlaar?"Oefen nu de toets 📝":"Klaar! 🎉") : "Volgende →";
+  nb.onclick = laatste ? (()=>{ if(toetsKlaar && typeof startProeftoets==="function") startProeftoets(); else show("home"); })
+                       : (()=>{ ovStap++; renderOverzicht(); });
+}
+function renderOvCheck(c){
+  el("ov-check").innerHTML=`<div class="ov-q">🧠 ${c.q}</div><div class="ov-opts" id="ov-opts"></div><div class="ov-fb" id="ov-fb"></div>`;
+  const box=el("ov-opts");
+  shuffle(c.o).forEach(opt=>{ const b=document.createElement("button"); b.className="ov-opt"; b.textContent=opt; b.onclick=()=>ovAntwoord(b,opt,c); box.appendChild(b); });
+}
+function ovAntwoord(b,opt,c){
+  const opts=el("ov-opts"); if(opts.dataset.done) return; opts.dataset.done="1";
+  [...opts.children].forEach(x=>x.disabled=true);
+  if(opt===c.a){ b.classList.add("ok"); el("ov-fb").innerHTML=`<span class="ok">✅ ${c.goed||"Goed zo!"}</span>`; }
+  else { b.classList.add("mis");
+    const goedBtn=[...opts.children].find(x=>x.textContent===c.a); if(goedBtn) goedBtn.classList.add("ok");
+    const uitleg=(c.fout&&c.fout[opt])||("Het juiste antwoord is "+c.a+"."); el("ov-fb").innerHTML=`<span class="mis">💡 ${uitleg}</span>`; }
+}
+
 /* ---------- reset ---------- */
 function resetAlles(){
   if(confirm("Weet je het zeker? Al je voortgang (woorden, niveaus en sterren) wordt gewist.")){
@@ -1670,11 +1782,13 @@ function startProeftoets(){
     if(!cand.length) o.niveaus.forEach(nv=>nv.vragen.forEach(q=>{ if(q.t!=="vb") cand.push(q); }));
     shuffle(cand).slice(0,2).forEach(q=>set.push(q));
   });
+  // extra discriminatie-vragen (per vak in content.js) — dwingen je om de juiste regel te KIEZEN
+  if(window.MIXVRAGEN&&window.MIXVRAGEN.length) window.MIXVRAGEN.forEach(q=>set.push(q));
   const vragen=shuffle(set);
   if(!vragen.length){ toast("Nog geen vragen voor de proeftoets."); return; }
   ronde={vragen, i:0, goed:0, antwoorden:[], proef:true};
   huidigTopic=null; S.laatste=null; save();
-  el("q-titel").textContent="Proeftoets H8"; el("q-lvl").textContent="📝 Oefentoets";
+  el("q-titel").textContent=VAK.proefTitel||"Oefentoets"; el("q-lvl").textContent="📝 Oefentoets";
   show("quiz"); renderVraag();
 }
 function proefEinde(){
@@ -1736,7 +1850,14 @@ function initVak(){
   // 3e tegel: spel (talen) of proeftoets (wiskunde)
   const key = VAK.tegels.includes("proeftoets") ? "proeftoets" : (VAK.tegels.includes("spel")?"spel":null);
   const t3=el("tile-3");
-  if(t3){ if(!key){ t3.style.display="none"; } else { const d=TEGEL3[key]; setText("tile-3-em",d.em); setText("tile-3-h",d.h); setText("tile-3-p",d.p); t3.setAttribute("onclick",d.fn); } }
+  if(t3){ if(!key){ t3.style.display="none"; } else { const d=TEGEL3[key]; setText("tile-3-em",d.em); setText("tile-3-h",d.h); setText("tile-3-p",d.p); t3.setAttribute("onclick",d.fn);
+    if(key==="proeftoets" && VAK.tegelProef){ const o=VAK.tegelProef; setText("tile-3-em",o.em||d.em); setText("tile-3-h",o.h||d.h); setText("tile-3-p",o.p||d.p); } } }
+  // Grammatica-kaart-tegel (interactief overzicht): alleen als dit vak window.OVERZICHT heeft
+  const tk=el("tile-kaart-btn");
+  if(tk && window.OVERZICHT && window.OVERZICHT.stappen && window.OVERZICHT.stappen.length){ tk.style.display="flex"; if(window.OVERZICHT.titel) setText("tile-kaart-h", window.OVERZICHT.titel); }
+  // Overzichtsfilm-tegel: alleen als de film is gerenderd (id in window.VIDEOS)
+  const tf=el("tile-film-btn");
+  if(tf && VAK.overzichtFilm && window.VIDEOS && window.VIDEOS.includes(VAK.overzichtFilm)){ tf.style.display="flex"; }
   // Podcast-tegel: alleen tonen als dit vak afleveringen heeft (window.PODCASTS, per vak in content.js)
   const tp=el("tile-podcast-btn");
   if(tp && window.PODCASTS && window.PODCASTS.length){
